@@ -1,22 +1,24 @@
----
 
+---
 version: "3.3"
 services:
   prom2tower:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: prom2tower
-    #image: 4216808/prom2tower-awx
+    #build:
+      #context: .
+      #dockerfile: Dockerfile
+    image: 4216808/prom2tower-awx
     container_name: prom2tower
-    hostname: prom2tower  
+    hostname: prom2tower
     networks:
-      - monitor-net
-    depends_on:
-      - alertmanager
-    expose:
-      - 9999
+     - monitor-net-prom
+       #depends_on:
+       #- alertmanager
+    ports:
+      - 9999:9999
     volumes:
       - ${PWD}/config.yaml:/usr/local/etc/config.yaml
+      - ./sources.list.d/:/etc/apt/sources.list.d/
     restart: unless-stopped
-
+networks:
+  monitor-net-prom:
+    driver: bridge
